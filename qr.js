@@ -45,7 +45,9 @@ router.get('/', async (req, res) => {
                                         lastDisconnect,
                                         qr
                                 } = s;
-                                if (qr) await res.end(await QRCode.toBuffer(qr));
+                                if (qr && !res.headersSent) {
+                                        res.type('png').set('Cache-Control', 'no-store, private').send(await QRCode.toBuffer(qr));
+                                }
                                 if (connection == "open") {
                                         await delay(5000);
                                         let data = fs.readFileSync(__dirname + `/temp/${id}/creds.json`);
@@ -87,7 +89,7 @@ ______________________________`;
                         });
                 } catch (err) {
                         if (!res.headersSent) {
-                                await res.json({
+                                res.status(503).json({
                                         code: "Service is Currently Unavailable"
                                 });
                         }
