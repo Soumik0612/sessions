@@ -1,0 +1,3 @@
+node_modules/
+# Generated per-session WhatsApp credentials
+temp/*/

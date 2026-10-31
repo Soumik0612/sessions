@@ -1,7 +1,9 @@
 services:
   - type: web
     name: dave
-    env: docker
-    region: Frankfurt
+    runtime: node
+    region: frankfurt
     plan: free
-    
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /
