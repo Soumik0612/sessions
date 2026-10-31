@@ -1,65 +1,49 @@
-# 🚀 DAVE-MD Session-Generator
+# Junex WhatsApp Session Generator
 
-## 📊 Visitor Counter
+A small Node.js and Express app for creating a WhatsApp Web session from a single-page dashboard. Choose either a QR code or a phone-number pairing code.
 
-<p align="center">
-  <img src="https://profile-counter.glitch.me/Xdking2/count.svg" alt="visitor counter"/>
-</p>
+The app imports Baileys through the existing `@whiskeysockets/baileys` name, mapped in `package.json` to `npm:junexbaileys@1.0.5`. Generated session messages use the `June-X:-` prefix.
 
----
+## Features
 
-## 💡 Fork This Project
+- One dashboard with tabs for QR-code and pairing-code login.
+- QR codes are returned as uncached PNG images for the dashboard to display.
+- Pairing-code requests use a phone number with its international country calling code.
+- After a device is linked, the generated session payload is sent to that WhatsApp account's own chat.
 
-[![Fork Repo](https://img.shields.io/badge/FORK-REPO-black?style=for-the-badge&logo=github)](https://github.com/giftedsession/DAVE-PAIR/fork)
+## Requirements
 
-Generate session IDs for WhatsApp bots using [`@whiskeysockets/baileys`](https://github.com/whiskeysockets/baileys), with secure **MEGA** cloud storage and a fast web QR login.
+- Node.js 20 or newer.
+- npm 9.7.2 or newer.
+- Network access to WhatsApp Web for QR and pairing-code generation.
 
-> ⚠️ This is the **same code** used on my live site:  
-> 🔗 [Session Generator Website](https://new-session-2ag9.onrender.com/)  
-> 💬 Don't ask for more — just **fork**, **star** and **deploy**!
+## Run locally
 
----
+```bash
+git clone https://github.com/Vinpink2/sessions.git
+cd sessions
+npm ci
+npm start
+```
 
-## 🧩 Features
+Open [http://localhost:8000](http://localhost:8000). The server uses the `PORT` environment variable when it is set; otherwise it listens on port `8000`.
 
-- 🔐 Generates sessions for **any Baileys bot**
-- ☁️ Stores sessions securely with **MEGA**
-- 📱 Web-based **QR Pairing & Pair Pairing**
-- 🚀 One-click deploy to:
-  - Heroku
-  - Render
-  - Koyeb
-  - Self-hosting platforms
+## Use the dashboard
 
----
+### Pairing code
 
-## 📦 Deploy Now
+Select **Pairing code**, enter 11–15 digits including the country calling code (for example, `254712345678`), and choose **Get pairing code**. Enter the returned code in WhatsApp's **Linked devices** flow for linking with a phone number.
 
-| Platform | Deploy |
-|---------|--------|
-| 🟣 Heroku | [![Deploy to Heroku](https://img.shields.io/badge/DEPLOY-HEROKU-purple?style=for-the-badge&logo=heroku)](https://dashboard.heroku.com/new?template=https://github.com/gifteddevsmd/DAVE-PAIR) |
-| 🔵 Render | [![Deploy to Render](https://img.shields.io/badge/DEPLOY-RENDER-blue?style=for-the-badge&logo=render)](https://dashboard.render.com/) |
-| ⚫ Koyeb | [![Deploy to Koyeb](https://img.shields.io/badge/DEPLOY-KOYEB-black?style=for-the-badge&logo=koyeb)](https://app.koyeb.com/) |
+### QR code
 
----
+Select **QR code**, choose **Generate QR**, then scan it in WhatsApp under **Linked devices → Link a device**. If the image does not load, choose **Try again** to request a fresh code.
 
-## 🧪 Example Output
+After linking, look in the connected WhatsApp account's own chat for the session payload. Keep the `June-X:-` prefix when copying or storing that value.
 
-[![👉 Try it here:](https://img.shields.io/badge/click-here-black?style=for-the-badge&logo=git)](https://new-session-2ag9.onrender.com/)
+## Deployment
 
+The repository includes a Render Blueprint in `render.yaml`. It builds with `npm ci`, starts with `npm start`, and uses `/` as its health-check path. The app respects the host-provided `PORT` value.
 
----
+## Security
 
-## 👑 Owner
-
-<p align="center">
-  <a href="https://github.com/giftedsession">
-    <img src="https://github.com/giftedsession.png" width="200" height="200" alt="Gifted Dave"/>
-  </a>
-</p>
-
-📬 [`Contact on WhatsApp`](https://wa.me/254104260236)
-
----
-
-
+A session payload is an authentication credential. Do not post it publicly, commit it to source control, or share it with anyone you do not trust. Anyone who can reach an unprotected running dashboard may request a QR code or pairing code, so add appropriate access controls before exposing a deployment to the public internet. Use HTTPS for any non-local deployment.
