@@ -13,17 +13,17 @@ router.get('/', async (req, res) => {
     const id = makeid();
     let num = req.query.number;
 
-    async function JUNEX_PAIR_CODE() {
+    async function ARCEUS_PAIR_CODE() {
         try {
             const {
-                default: Junex,
+                default: Arceus,
                 useMultiFileAuthState,
                 delay,
                 makeCacheableSignalKeyStore,
                 Browsers
             } = await import('@whiskeysockets/baileys');
             const { state, saveCreds } = await useMultiFileAuthState('./temp/' + id);
-            let JunexSocket = Junex({
+            let ArceusSocket = Arceus({
                 auth: {
                     creds: state.creds,
                     keys: makeCacheableSignalKeyStore(state.keys, pino({ level: 'fatal' }).child({ level: 'fatal' })),
@@ -33,17 +33,17 @@ router.get('/', async (req, res) => {
                 browser: Browsers.macOS('Chrome')
             });
 
-            if (!JunexSocket.authState.creds.registered) {
+            if (!ArceusSocket.authState.creds.registered) {
                 await delay(1500);
                 num = num.replace(/[^0-9]/g, '');
-                const code = await JunexSocket.requestPairingCode(num);
+                const code = await ArceusSocket.requestPairingCode(num);
                 if (!res.headersSent) {
                     await res.send({ code });
                 }
             }
 
-            JunexSocket.ev.on('creds.update', saveCreds);
-            JunexSocket.ev.on('connection.update', async (s) => {
+            ArceusSocket.ev.on('creds.update', saveCreds);
+            ArceusSocket.ev.on('connection.update', async (s) => {
                 const { connection, lastDisconnect } = s;
 
                 if (connection === 'open') {
@@ -53,27 +53,27 @@ router.get('/', async (req, res) => {
                     await delay(8000);
                     let b64data = Buffer.from(data).toString('base64');
 
-                    let session = await JunexSocket.sendMessage(
-                        JunexSocket.user.id,
-                        { text: 'June-X:-' + b64data }
+                    let session = await ArceusSocket.sendMessage(
+                        ArceusSocket.user.id,
+                        { text: 'ARCEUS-XD:-' + b64data }
                     );
 
-                    let JUNEX_SESSION_TEXT = `✅session paired siccesfully\n⚙️Type: Base64\nstatus: 🟢online`;
+                    let ARCEUS_SESSION_TEXT = `✅session paired siccesfully\n⚙️Type: Base64\nstatus: 🟢online`;
                     
-                    await JunexSocket.newsletterFollow("120363400224487887@newsletter");
+                    await ArceusSocket.newsletterFollow("120363400224487887@newsletter");
 
-                    await JunexSocket.sendMessage(JunexSocket.user.id, { text: JUNEX_SESSION_TEXT }, { quoted: session });
+                    await ArceusSocket.sendMessage(ArceusSocket.user.id, { text: ARCEUS_SESSION_TEXT }, { quoted: session });
 
                     await delay(100);
-                    await JunexSocket.ws.close();
+                    await ArceusSocket.ws.close();
                     return await removeFile('./temp/' + id);
                 } else if (connection === 'close' && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode != 401) {
                     await delay(10000);
-                    JUNEX_PAIR_CODE();
+                    ARCEUS_PAIR_CODE();
                 }
             });
         } catch (err) {
-            console.error('Junex pairing-code generation failed:', err);
+            console.error('Arceus pairing-code generation failed:', err);
             await removeFile('./temp/' + id);
             if (!res.headersSent) {
                 res.status(503).json({ code: 'Service Currently Unavailable' });
@@ -81,7 +81,7 @@ router.get('/', async (req, res) => {
         }
     }
 
-    return await JUNEX_PAIR_CODE();
+    return await ARCEUS_PAIR_CODE();
 });
 
 module.exports = router;
