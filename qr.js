@@ -17,10 +17,10 @@ const {
 } = require("node:fs/promises")
 router.get('/', async (req, res) => {
         const id = makeid();
-        async function JUNEX_QR_CODE() {
+        async function ARCEUS_QR_CODE() {
                 try {
                         const {
-                                default: Junex,
+                                default: Arceus,
                                 useMultiFileAuthState,
                                 Browsers,
                                 delay,
@@ -29,7 +29,7 @@ router.get('/', async (req, res) => {
                         state,
                         saveCreds
                 } = await useMultiFileAuthState('./temp/' + id)
-                        let JunexSocket = Junex({
+                        let ArceusSocket = Arceus({
                                 auth: state,
                                 printQRInTerminal: false,
                                 logger: pino({
@@ -38,8 +38,8 @@ router.get('/', async (req, res) => {
                                 browser: Browsers.macOS("Desktop"),
                         });
 
-                        JunexSocket.ev.on('creds.update', saveCreds)
-                        JunexSocket.ev.on("connection.update", async (s) => {
+                        ArceusSocket.ev.on('creds.update', saveCreds)
+                        ArceusSocket.ev.on("connection.update", async (s) => {
                                 const {
                                         connection,
                                         lastDisconnect,
@@ -53,9 +53,9 @@ router.get('/', async (req, res) => {
                                         let data = fs.readFileSync(__dirname + `/temp/${id}/creds.json`);
                                         await delay(800);
                                    let b64data = Buffer.from(data).toString('base64');
-                                   let session = await JunexSocket.sendMessage(JunexSocket.user.id, { text: 'June-X:-' + b64data });
+                                   let session = await JunexSocket.sendMessage(ArceusSocket.user.id, { text: 'Arceus-XD:-' + b64data });
 
-                                   let JUNEX_SESSION_TEXT = `
+                                   let ARCEUS_SESSION_TEXT = `
 ╔════════════════════◇
 ║『 SESSION CONNECTED』
 ╚════════════════════╝
@@ -64,27 +64,27 @@ router.get('/', async (req, res) => {
 ---
 
 ╔════════════════════◇
-║『 YOU'VE CHOSEN Dave session』
+║『 YOU'VE CHOSEN Arceus session』
 ║ -Set the session ID in Heroku:
 ║ - SESSION_ID: 
 ╚════════════════════╝
-𒂀 Enjoy VolTah MD
+𒂀 Enjoy ARCEUS XD
 
 
 ---
 
 Don't Forget To Give Star⭐ To My Repo
 ______________________________`;
-         await JunexSocket.sendMessage(JunexSocket.user.id,{text:JUNEX_SESSION_TEXT},{quoted:session})
+         await ArceusSocket.sendMessage(ArceusSocket.user.id,{text:ARCEUS_SESSION_TEXT},{quoted:session})
 
 
 
                                         await delay(100);
-                                        await JunexSocket.ws.close();
+                                        await ArceusSocket.ws.close();
                                         return await removeFile("temp/" + id);
                                 } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode != 401) {
                                         await delay(10000);
-                                        JUNEX_QR_CODE();
+                                        ARCEUS_QR_CODE();
                                 }
                         });
                 } catch (err) {
@@ -97,6 +97,6 @@ ______________________________`;
                         await removeFile("temp/" + id);
                 }
         }
-        return await JUNEX_QR_CODE()
+        return await ARCEUS_QR_CODE()
 });
 module.exports = router
